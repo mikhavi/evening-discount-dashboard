@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <title>Вечерняя уценка</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="ayan-theme.css?v=25">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="side-label">РАБОЧЕЕ МЕСТО</div>
+      <nav class="side-nav" aria-label="Разделы">
+        <button class="nav-item active" data-nav="upload"><span class="nav-icon">↥</span>Файл и проверка</button>
+        <button class="nav-item" data-nav="overview"><span class="nav-icon">◫</span>Дашборд</button>
+        <button class="nav-item" data-nav="stickers"><span class="nav-icon">▤</span>План уценки<span class="nav-count" id="nav-promo-count">—</span></button>
+        <button class="nav-item" data-nav="approvals"><span class="nav-icon">✓</span>Цены и касса<span class="nav-count muted" id="nav-approval-count">—</span></button>
+        <button class="nav-item" data-nav="categories"><span class="nav-icon">▦</span>Категории<span class="nav-count" id="nav-category-count">4</span></button>
+        <button class="nav-item" data-nav="exceptions"><span class="nav-icon">⌁</span>Исключения<span class="nav-count muted" id="nav-risk-count">—</span></button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="sidebar-note"><span class="note-dot"></span><div><strong>Вечерний цикл</strong><small>Срез 19:30 · Стикеры 19:40</small></div></div>
+        <div class="sidebar-foot">КУЛИНАРИЯ <span>·</span> 20:00</div>
+      </div>
+    </aside>
+
+    <main class="main" id="top">
+      <header class="topbar">
+        <div class="breadcrumb">Операции <span>/</span> Собственное производство</div>
+        <div class="top-actions">
+          <span class="live-dot"></span><span class="top-status">Локальная обработка</span>
+          <span class="avatar">ОП</span>
+        </div>
+      </header>
+
+      <section class="content">
+        <section class="upload-view" data-view="upload" aria-label="Файл и проверка выгрузки">
+        <div class="upload-view-heading"><div class="section-kicker">ШАГ 1 · ДАННЫЕ</div><h2>Файл и проверка</h2><p>Загрузите остатки, сверьте штрихкоды и укажите время закрытия.</p></div>
+        <section class="upload-card" id="drop-zone" aria-label="Загрузка выгрузки">
+          <div class="upload-symbol"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5M5 14.5v4A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5v-4"/></svg></div>
+          <div class="upload-copy"><strong id="upload-title">Загрузите выгрузку из 1С</strong><span id="upload-caption">Перетащите файл сюда или выберите его на компьютере · .xlsx</span></div>
+          <div class="upload-actions"><span class="file-state" id="file-state"><i></i> Файл не загружен</span><button class="button button-dark" id="choose-file">Загрузить Excel <span>↗</span></button><input type="file" id="file-input" accept=".xlsx" hidden></div>
+          <div class="upload-progress" id="upload-progress"><span></span></div>
+        </section>
+
+        <section class="unit-setting" aria-labelledby="unit-setting-title">
+          <div><strong id="unit-setting-title">Проверка остатка в штуках</strong><span>Если правило включено, дробное количество «шт» считается ошибкой выгрузки и не направляется на бракераж автоматически.</span></div>
+          <label class="unit-setting-control"><input id="whole-units-only" type="checkbox" checked><span>Для «шт» — только целые числа</span></label>
+        </section>
+        <section class="stock-setting" aria-labelledby="stock-setting-title">
+          <div class="stock-setting-heading"><strong id="stock-setting-title">Порог бракеража</strong><span>Выберите знак и значение отдельно для весовых и штучных товаров.</span></div>
+          <div class="stock-setting-grid">
+            <div class="stock-setting-rule"><label for="stock-kg-limit">Весовой товар, кг</label><div class="stock-setting-entry"><select id="stock-kg-operator" aria-label="Знак порога для весового товара" aria-describedby="stock-setting-help"><option value="lte">≤</option><option value="lt">&lt;</option></select><input id="stock-kg-limit" type="text" inputmode="decimal" value="0,5" aria-describedby="stock-setting-help"><span>кг</span></div></div>
+            <div class="stock-setting-rule"><label for="stock-pieces-limit">Штучный товар и порции</label><div class="stock-setting-entry"><select id="stock-pieces-operator" aria-label="Знак порога для штучного товара и порций" aria-describedby="stock-setting-help"><option value="lte">≤</option><option value="lt">&lt;</option></select><input id="stock-pieces-limit" type="text" inputmode="decimal" value="1" aria-describedby="stock-setting-help"><span>шт / порц</span></div></div>
+          </div>
+          <p id="stock-setting-help">«≤» отправляет на бракераж и остаток ровно на пороге. «&lt;» оставляет его кандидатом на уценку, если нет других ограничений.</p>
+        </section>
+        <section class="unit-error-notice" id="unit-error-notice" hidden role="alert" aria-labelledby="unit-error-title">
+          <div class="unit-error-icon" aria-hidden="true">!</div>
+          <div class="unit-error-copy"><strong id="unit-error-title">Дробный остаток в «шт»: <span id="unit-error-count">0</span></strong><p>Проверьте и исправьте количество в 1С. До исправления эти позиции не входят в план уценки и не относятся к бракеражу автоматически.</p><ul id="unit-error-list"></ul></div>
+          <button class="button unit-error-open" id="unit-error-open" type="button">Открыть ошибки <span>→</span></button>
+        </section>
+
+        <section class="scope-notice" id="scope-notice" hidden aria-live="polite"><span class="scope-notice-icon" aria-hidden="true">↗</span><div><strong>Пропущено строк вне целевых категорий: <span id="scope-excluded-count">0</span></strong><p>Они не участвуют в расчётах, плане уценки, исключениях и Excel-отчётах.</p><div class="scope-categories" id="scope-categories"></div><p class="scope-empty" id="scope-empty" hidden>Целевых товаров в файле нет. Для плана уценки загрузите другую выгрузку.</p></div></section>
+
+        <section class="barcode-panel" id="barcode-panel" hidden aria-labelledby="barcode-title">
+          <div class="barcode-panel-head"><div class="barcode-panel-intro"><div class="section-kicker"><span class="barcode-alert-icon" id="barcode-alert-icon" aria-hidden="true">!</span><span id="barcode-kicker-text">ВНИМАНИЕ · ШТРИХКОДЫ В ПЛАНЕ</span></div><h2 id="barcode-title">Требуется сверка кодов <span id="barcode-count">0</span></h2><p id="barcode-caption">Перед печатью стикеров и настройкой скидки сверьте штрихкоды в 1С.</p><small class="barcode-panel-note" id="barcode-panel-note">Ошибка кода сама по себе не исключает товар из плана уценки.</small></div><button class="button barcode-action" id="barcode-show-all">Открыть реестр <span>→</span></button></div>
+          <div class="barcode-list" id="barcode-list"></div>
+          <details class="barcode-blocked" id="barcode-blocked" hidden><summary><span>Ошибки кода у товаров вне плана <strong id="barcode-blocked-count">0</strong></span><small>Сверка для вечерней уценки не требуется</small></summary><div class="barcode-blocked-list" id="barcode-blocked-list"></div></details>
+        </section>
+
+        <div class="closing-config"><div><strong>Закрытие магазина</strong><span>В регламенте время не указано. Укажите фактическое время; 23:00 — пример.</span></div><label><span>До</span><input id="closing-time" type="time" value="23:00" aria-label="Время закрытия магазина"></label></div>
+
+        <div class="upload-error" id="upload-error" hidden role="alert"><strong>Не удалось обработать выгрузку</strong><span id="upload-error-text"></span></div>
+
+        <section class="empty-state" id="empty-state" aria-labelledby="empty-title">
+          <div class="empty-intro"><div class="section-kicker">КАК ЭТО РАБОТАЕТ</div><h2 id="empty-title">Один файл — готовый план на вечер</h2><p>Загрузите выгрузку выше. Анализ займёт несколько секунд, а все данные останутся на этом устройстве.</p></div>
+          <div class="empty-steps">
+            <div class="empty-step"><span>01</span><strong>Загрузите остатки</strong><small>Excel из 1С на 19:30</small></div>
+            <div class="empty-step"><span>02</span><strong>Проверьте решения</strong><small>Сроки, категории, цены и риски</small></div>
+            <div class="empty-step"><span>03</span><strong>Скачайте план</strong><small>Стикеры и файлы для директора</small></div>
+          </div>
+        </section>
+
+        <div class="alert-strip" id="expiry-alert" hidden><span class="alert-icon">!</span><span id="expiry-alert-text"></span><button class="alert-link" id="expiry-alert-link">Посмотреть <span>→</span></button></div>
+        <div class="dashboard-cta" id="dashboard-cta" hidden><div><span>ФАЙЛ ОБРАБОТАН</span><strong>Переходите к решениям на вечер</strong><small id="upload-summary">План и исключения готовы</small></div><button class="button button-dark" data-nav="overview">Открыть дашборд <span>→</span></button></div>
+        </section>
+
+        <section class="section-block" data-view="overview" hidden>
+          <div class="section-title-row"><div><div class="section-kicker">ШАГ 2 · ДАШБОРД</div><h2>Что делать с остатками</h2><p class="section-subtitle">Срез на 19:30 · скидка с 20:00 до закрытия магазина</p></div><span class="freshness"><span class="freshness-dot"></span>Расчёт по загруженному файлу</span></div>
+          <div class="decision-board" aria-label="Сводка решений по товарам">
+            <article class="decision-lead"><span class="decision-eyebrow">ПЛАН НА 19:40</span><div class="decision-lead-number" id="kpi-items">—</div><h3>К уценке</h3><p id="kpi-items-context">Позиции для стикеров</p><button class="button" data-promo-filter="all">Открыть план стикеров <span>→</span></button></article>
+            <article class="decision-status status-before"><div class="decision-status-head"><h3>Срок истечёт<br>до скидки</h3><span class="decision-status-icon">!</span></div><strong class="decision-status-number" id="kpi-expired-before">—</strong><span class="decision-status-caption" id="kpi-already-expired">К 20:00 продавать нельзя</span><div class="decision-status-loss"><span>Риск списания</span><strong id="kpi-loss-before">—</strong><small id="kpi-loss-before-note">Остаток × себестоимость</small></div><button class="decision-status-link" data-risk-stage="before">Смотреть товары <span>→</span></button></article>
+            <article class="decision-status status-during"><div class="decision-status-head"><h3>Срок истечёт<br>во время скидки</h3><span class="decision-status-icon">◷</span></div><strong class="decision-status-number" id="kpi-expired-during">—</strong><span class="decision-status-caption">Не включены в план акции</span><div class="decision-status-loss"><span>Риск списания</span><strong id="kpi-loss-during">—</strong><small id="kpi-loss-during-note">Остаток × себестоимость</small></div><button class="decision-status-link" data-risk-stage="during">Смотреть товары <span>→</span></button></article>
+            <article class="decision-status status-writeoff"><div class="decision-status-head"><h3>На бракераж</h3><span class="decision-status-icon">↘</span></div><strong class="decision-status-number" id="kpi-writeoff">—</strong><span class="decision-status-caption" id="kpi-writeoff-rule">Остаток ≤ 0,5 кг или ≤ 1 шт/порция</span><button class="decision-status-link" data-risk-card="stock">Смотреть товары <span>→</span></button></article>
+            <article class="decision-status status-margin"><div class="decision-status-head"><h3>Цена скорректирована</h3><span class="decision-status-icon">₸</span></div><strong class="decision-status-number" id="kpi-margin">—</strong><span class="decision-status-caption" id="kpi-margin-caption">Из плана · настроить кассу</span><button class="decision-status-link" data-nav="approvals">Цены и касса <span>→</span></button></article>
+          </div>
+          <div class="decision-clarity" id="decision-clarity">Цены MARGIN_ALERT рассчитываются для передачи на кассу к 20:00. Бракераж может пересекаться со сроками годности, поэтому числа карточек не складываются.</div>
+          <div class="revenue-strip"><div><span>ПОТЕНЦИАЛ ПОСЛЕ УЦЕНКИ <button class="info-trigger" id="potential-info" aria-label="Как считается потенциальная выручка" title="Как считается">i</button></span><strong id="kpi-promo-value">—</strong><small>Если продать весь акционный остаток</small></div><button class="revenue-link" id="potential-details-button">Как считается <span>→</span></button></div>
+
+          <div class="overview-grid">
+            <article class="panel category-panel">
+              <div class="panel-heading"><div><div class="section-kicker">РАЗБОР ПО ГРУППАМ</div><h3>Категории товаров</h3></div><span class="small-badge" id="category-count">4 категории</span></div>
+              <div class="category-list" id="category-list"></div>
+              <div class="category-legend" aria-label="Обозначения цветов"><span><i class="legend-promo"></i>К уценке</span><span><i class="legend-before"></i>Срок до 20:00</span><span><i class="legend-during"></i>Срок во время скидки</span><span><i class="legend-writeoff"></i>Бракераж</span><span><i class="legend-other"></i>Другие исключения</span></div>
+              <div class="panel-footnote">Полоса делит товары без повторов. Если товар попал и на бракераж, и в группу по сроку, в полосе он показан по сроку, а бракераж отмечен отдельно. Корректировка цены входит в уценку. Нажмите на категорию для деталей.</div>
+            </article>
+            <article class="panel calculation-panel" id="potential-details">
+              <div class="panel-heading"><div><div class="section-kicker">ПРОЗРАЧНЫЙ РАСЧЁТ</div><h3>Как считается потенциал</h3></div><span class="calculation-icon">₸</span></div>
+              <p>В расчёт входят только товары из плана уценки. Для каждого умножаем <strong>новую цену за единицу на остаток</strong>, затем складываем результаты.</p>
+              <div class="calculation-rule">Новая цена: старая цена × 0,7 → округление вниз до 5 ₸. Если это ниже себестоимости × 1,05, действует минимум с отметкой <strong>MARGIN_ALERT</strong>. Директор может утвердить более высокую цену в допустимых пределах.</div>
+              <div class="calculation-formula">Σ (акционная цена × остаток) <span>=</span> <strong id="calc-potential">—</strong></div>
+              <div class="calculation-meta"><span>По старой цене эти же остатки</span><strong id="kpi-stock-value">—</strong></div>
+              <div class="calculation-meta"><span>Разница из-за уценки</span><strong id="calc-discount-difference">—</strong></div>
+              <div class="calculation-note">Это возможная выручка, если продать весь остаток <span id="calc-promo-count">—</span> товаров, включая <span id="calc-barcode-count">—</span> с кодом для сверки. Для MARGIN_ALERT учтены действующие в плане цены: автоматически ограниченные или изменённые директором. Кассу нужно настроить отдельно; фактические продажи в файле не указаны.</div>
+            </article>
+          </div>
+        </section>
+
+        <section class="section-block detail-view" data-view="categories" hidden>
+          <div class="section-title-row"><div><div class="section-kicker">ПОДРОБНЫЙ РАЗБОР</div><h2>Категории кулинарии</h2><p class="section-subtitle">Все товары из разрешённых категорий: план, сроки, ошибки и причины решения.</p></div></div>
+          <div class="category-tabs" id="category-tabs"></div>
+          <div class="category-detail-head"><div><div class="section-kicker">ВЫБРАННАЯ КАТЕГОРИЯ</div><h3 id="category-detail-title">—</h3><p id="category-detail-subtitle">—</p></div><span class="category-total" id="category-total">—</span></div>
+          <div class="category-metrics" id="category-metrics"></div>
+          <div class="table-toolbar"><div class="table-tabs category-filter-tabs"><button class="category-filter active" data-category-filter="all">Все <span id="category-filter-all">—</span></button><button class="category-filter" data-category-filter="promo">К уценке <span id="category-filter-promo">—</span></button><button class="category-filter" data-category-filter="before">До 20:00 <span id="category-filter-before">—</span></button><button class="category-filter" data-category-filter="during">Во время акции <span id="category-filter-during">—</span></button><button class="category-filter" data-category-filter="data">Ошибки данных <span id="category-filter-data">—</span></button><button class="category-filter" data-category-filter="stock">Бракераж <span id="category-filter-stock">—</span></button></div><label class="search-box"><span>⌕</span><input id="category-search" type="search" placeholder="Найти товар или штрихкод"></label></div>
+          <div class="panel table-panel"><div class="table-wrap"><table><thead><tr><th>ТОВАР</th><th>ШТРИХКОД</th><th>ОСТАТОК</th><th class="numeric">СТАРАЯ ЦЕНА</th><th class="numeric">НОВАЯ ЦЕНА</th><th>СРОК ДО</th><th>РЕШЕНИЕ / ПРИЧИНА</th></tr></thead><tbody id="category-body"></tbody></table></div><div class="table-empty" id="category-empty" hidden>В этом фильтре нет товаров.</div><div class="table-footer"><span id="category-footer-count">—</span><span>В одной строке может быть несколько причин исключения</span></div></div>
+        </section>
+
+        <section class="section-block detail-view" data-view="stickers" hidden>
+          <div class="section-title-row"><div><div class="section-kicker">ПОДГОТОВКА ВИТРИНЫ · 19:40</div><h2>План стикеров</h2><p class="section-subtitle">До наклейки сверьте проблемные штрихкоды. Для MARGIN_ALERT цена ограничена порогом маржи; на кассе её нужно настроить без повторной скидки −30%.</p></div><div class="plan-download-actions"><button class="button button-light approval-open" data-nav="approvals">Цены и касса <span>→</span></button><button class="button button-light" id="download-margin">Скачать MARGIN_ALERT <span id="download-margin-count">—</span> ↓</button><button class="button button-dark" id="download-plan">Скачать Excel-книгу <span>↓</span></button></div></div>
+          <label class="margin-mode"><input id="require-director-approval" type="checkbox"><span><strong>Отправлять MARGIN_ALERT директору на согласование</strong><small>Если выключено, минимальная допустимая цена принимается автоматически. Затем итоговые цены собираются в файл для касс.</small></span></label>
+          <div class="pos-export"><div><strong>Файл цен для касс на 20:00</strong><p id="pos-export-note">В файл попадут позиции с MARGIN_ALERT, разрешённые выбранным порядком согласования. Сайт готовит JSON, но не отправляет его в кассы.</p></div><button class="button button-dark" id="download-pos" type="button">Скачать JSON для касс <span id="download-pos-count">—</span> ↓</button></div>
+          <section class="plan-readiness" id="plan-readiness" aria-live="polite" aria-labelledby="plan-readiness-title"><div class="plan-readiness-main"><div><span class="plan-readiness-kicker">ПЕРЕД НАКЛЕЙКОЙ СТИКЕРОВ</span><h3 id="plan-readiness-title">План содержит кандидатов на уценку</h3><p id="plan-readiness-note">Не отдавайте весь список на наклейку до проверки отметок.</p></div><div class="plan-readiness-action"><strong class="plan-readiness-count" id="plan-ready-count">— из —</strong><button class="button button-dark" id="download-ready" type="button" title="Скачать все готовые позиции, независимо от поиска">Скачать готовые <span>↓</span></button></div></div><div class="plan-readiness-track" aria-hidden="true"><span id="plan-ready-progress"></span></div><div class="plan-readiness-details"><span><strong id="plan-ready-label">—</strong> готовы к наклейке</span><span><strong id="plan-code-pending">—</strong> сверить код</span><span><strong id="plan-approval-pending">—</strong> согласовать цену</span></div><small>Отметки могут пересекаться. Исправленные штрихкоды загрузите повторно из 1С.</small></section>
+          <div class="table-toolbar"><div class="table-tabs"><button class="table-tab active" data-table-tab="all">Все кандидаты <span id="tab-all-count">—</span></button><button class="table-tab" data-table-tab="ready">Готовы к наклейке <span id="tab-ready-count">—</span></button><button class="table-tab" data-table-tab="barcode">Проверить штрихкод <span id="tab-barcode-count">—</span></button><button class="table-tab" data-table-tab="margin">Цена скорректирована <span id="tab-margin-count">—</span></button></div><label class="search-box"><span>⌕</span><input id="promo-search" type="search" placeholder="Найти товар или штрихкод"><kbd>⌘ K</kbd></label></div>
+          <div class="panel table-panel"><div class="table-wrap"><table><thead><tr><th>ТОВАР</th><th>ШТРИХКОД</th><th>КАТЕГОРИЯ</th><th class="numeric">СТАРАЯ ЦЕНА</th><th class="numeric">НОВАЯ ЦЕНА</th><th>ОСТАТОК</th><th>ОТМЕТКА</th></tr></thead><tbody id="promo-body"></tbody></table></div><div class="table-empty" id="promo-empty" hidden>Ничего не найдено. Попробуйте изменить запрос.</div><div class="table-footer"><span id="promo-footer-count">—</span><span>Штрихкоды сохранены как текст</span></div></div>
+        </section>
+
+        <section class="section-block detail-view" data-view="approvals" hidden>
+          <div class="section-title-row"><div><div class="section-kicker">ОГРАНИЧЕННЫЕ ЦЕНЫ · MARGIN_ALERT</div><h2>Цены и касса</h2><p class="section-subtitle" id="approval-mode-description">Цены с MARGIN_ALERT рассчитаны. Директор может их изменить.</p></div><div class="approval-file-actions"><button class="button button-light" id="approval-download">Скачать реестр <span>↓</span></button><button class="button button-dark" id="approval-upload" type="button">Загрузить исправленный Excel <span>↑</span></button><input type="file" id="approval-file-input" accept=".xlsx" hidden></div></div>
+          <p class="approval-upload-hint">Правки в Excel: измените «Цена к продаже» в реестре или «Новая цена» в итоговой книге, затем загрузите файл обратно.</p>
+          <div class="margin-import-error" id="margin-import-error" role="alert" hidden></div>
+          <div class="approval-intro"><div><strong id="approval-progress">—</strong><span>Решения хранятся в этом браузере.</span></div><label>Имя директора для изменения цены<input id="approver-name" type="text" maxlength="80" autocomplete="name" placeholder="Например, Алия К."></label></div>
+          <div class="approval-notice">Скачайте файл цен для касс и проверьте его применение. Сайт не отправляет цены автоматически.</div>
+          <div class="approval-list" id="approval-list"></div>
+        </section>
+
+        <section class="section-block detail-view" data-view="exceptions" hidden>
+          <div class="section-title-row"><div><div class="section-kicker">КОНТРОЛЬ И БЕЗОПАСНОСТЬ</div><h2>Исключения и риски</h2><p class="section-subtitle">Причины разделены по группам. Одна позиция может попасть в несколько групп.</p></div><button class="button button-light" id="download-exceptions">Скачать Excel <span>↓</span></button></div>
+          <div class="risk-summary" id="risk-summary"></div>
+          <div class="table-toolbar"><div class="table-tabs"><button class="risk-tab active" data-risk-filter="all">Все <span id="risk-all-count">—</span></button><button class="risk-tab" data-risk-filter="data">Проверка выгрузки <span id="risk-data-count">—</span></button><button class="risk-tab" data-risk-filter="expiry">Срок годности <span id="risk-expiry-count">—</span></button><button class="risk-tab" data-risk-filter="stock">Бракераж <span id="risk-stock-count">—</span></button><button class="risk-tab" data-risk-filter="margin">Маржа <span id="risk-margin-count">—</span></button></div><label class="search-box"><span>⌕</span><input id="risk-search" type="search" placeholder="Найти в реестре"><kbd>⌘ K</kbd></label></div>
+          <div class="expiry-filters" id="expiry-filters" hidden><span>Когда истекает срок:</span><button class="expiry-tab active" data-expiry-filter="all">Все <span id="expiry-all-count">—</span></button><button class="expiry-tab" data-expiry-filter="before">До 20:00 <span id="expiry-before-count">—</span></button><button class="expiry-tab" data-expiry-filter="during">Во время скидки <span id="expiry-during-count">—</span></button><button class="expiry-tab" data-expiry-filter="review">Проверить срок <span id="expiry-review-count">—</span></button></div>
+          <div class="panel table-panel"><div class="table-wrap"><table><thead><tr><th>ТОВАР</th><th>ШТРИХКОД</th><th>КАТЕГОРИЯ</th><th>ОСТАТОК</th><th>СТАТУС</th><th>ПОЧЕМУ</th></tr></thead><tbody id="risk-body"></tbody></table></div><div class="table-empty" id="risk-empty" hidden>Ничего не найдено. Попробуйте изменить запрос.</div><div class="table-footer"><span id="risk-footer-count">—</span><span>Срок проверяется до закрытия магазина</span></div></div>
+        </section>
+
+        <footer class="page-footer"><span>Расчёты выполняются в браузере · файл не отправляется на сервер</span><span>УЦЕНКА / 01</span></footer>
+      </section>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
+  <dialog class="margin-import-dialog" id="margin-import-dialog" aria-labelledby="margin-import-title"><div class="margin-import-dialog-content"><div class="section-kicker">ПРОВЕРКА ИСПРАВЛЕННОГО ФАЙЛА</div><h2 id="margin-import-title">Проверьте изменения цен</h2><p id="margin-import-description"></p><div class="margin-import-changes" id="margin-import-changes"></div><label class="margin-import-name" id="margin-import-name-wrap">Кто утверждает цены<input id="margin-import-name" type="text" maxlength="80" autocomplete="name" placeholder="Имя директора"></label><div class="margin-import-error" id="margin-import-dialog-error" role="alert" hidden></div><div class="margin-import-dialog-actions"><button class="button button-light" id="margin-import-cancel" type="button">Вернуться к файлу</button><button class="button button-dark" id="margin-import-confirm" type="button">Применить цены</button></div></div></dialog>
+  <script src="exceljs.min.js"></script>
+  <script src="app.js?v=40"></script>
+</body>
+</html>

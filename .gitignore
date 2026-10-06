@@ -1,0 +1,6 @@
+node_modules/
+~$*.xlsx
+*.zip
+01_*.xlsx
+02_*.md
+03_*.md
